@@ -41,7 +41,7 @@ begin
       if metodo = '' then begin
       RESTRequest.Method := TRESTRequestMethod.rmGET;
       end
-      else if (metodo = 'GET') or (metodo = 'GET') then begin
+      else if (metodo = 'GET') or (metodo = 'get') then begin
       RESTRequest.Method := TRESTRequestMethod.rmGET;
       end
       else if (metodo = 'PUT') or (metodo = 'put') then begin
