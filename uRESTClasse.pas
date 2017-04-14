@@ -5,23 +5,31 @@ uses
 IPPeerClient, REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, REST.Types;
 type
 
-      TcRest = class
+      IcRest = interface
+      class function New(BaseUrl : string)         : IcRest
+      
+end;
+
+type
+
+      TcRest = class (TInterfacedObject, IcRest)
 private
       RESTClient   : TRESTClient;
       RESTRequest  : TRESTRequest;
       RESTResponse : TRESTResponse;
 public
-      function Executar(metodo : string) : string; //executa o request e retorna o json com o metodo podendo ser get, post, put, delete e patch
-      procedure addRecVal(recurso, valor: string);//adiciona o recurso e o segmento da uri (opcional�)
-      constructor Create (BaseUrl : string); overload;
-
+      function Executar(metodo : string)           : string;    //executa o request e retorna o json com o metodo podendo ser get, post, put, delete e patch
+      procedure addRecVal(recurso, valor: string);              //adiciona o recurso e o segmento da uri (opcional�)
+      class function New(BaseUrl : string)         : IcRest
+      constructor Create (BaseUrl : string);         overload;
+      destructor Destroy;
 end;
 
 implementation
 
 { cRest }
 
-constructor TcRest.Create(BaseUrl : string);//construtor que instancia os objetos rest
+constructor TcRest.Create(BaseUrl : string);                    //construtor que instancia os objetos rest
 begin
 //instancia as variaveis rest e interliga ao request
       RESTClient   := TRESTClient.Create(BaseUrl);
@@ -67,6 +75,19 @@ begin
       recurso := recurso + '/{valor}'; //adiciona a variavel valor a uri
       RESTRequest.Resource := recurso;
       RESTRequest.AddParameter('valor', valor, TRESTRequestParameterKind.pkURLSEGMENT);
+
+end;
+destructor TcRest.Destroy;
+begin
+      RESTClient.Free;
+      RESTRequest.Free;
+      RESTResponse.Free;
+
+end;
+class function New(BaseUrl : string)         : IcRest
+begin
+
+      Result := TcRest.Create(BaseUrl);
 
 end;
 
