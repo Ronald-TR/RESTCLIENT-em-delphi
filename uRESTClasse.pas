@@ -1,3 +1,4 @@
+
 unit uRESTClasse;
 
 interface
@@ -6,8 +7,9 @@ IPPeerClient, REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, REST.Typ
 type
 
       IcRest = interface
-      class function New(BaseUrl : string)         : IcRest
-      
+      function Executar(metodo : string) : string;
+      procedure addRecVal(recurso, valor: string);
+
 end;
 
 type
@@ -18,11 +20,11 @@ private
       RESTRequest  : TRESTRequest;
       RESTResponse : TRESTResponse;
 public
-      function Executar(metodo : string)           : string;    //executa o request e retorna o json com o metodo podendo ser get, post, put, delete e patch
-      procedure addRecVal(recurso, valor: string);              //adiciona o recurso e o segmento da uri (opcional�)
-      class function New(BaseUrl : string)         : IcRest
-      constructor Create (BaseUrl : string);         overload;
-      destructor Destroy;
+      function Executar(metodo : string)     : string;    //executa o request e retorna o json com o metodo podendo ser get, post, put, delete e patch
+      procedure addRecVal(recurso, valor:     string);    //adiciona o recurso e o segmento da uri (opcional�)
+      class function New(BaseUrl : string)   : IcRest;
+      constructor Create (BaseUrl : string); overload;
+      destructor Destroy; override;
 end;
 
 implementation
@@ -82,9 +84,9 @@ begin
       RESTClient.Free;
       RESTRequest.Free;
       RESTResponse.Free;
-
+    inherited;
 end;
-class function New(BaseUrl : string)         : IcRest
+class function TcRest.New(BaseUrl : string)         : IcRest;
 begin
 
       Result := TcRest.Create(BaseUrl);
